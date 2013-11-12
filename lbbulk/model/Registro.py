@@ -11,8 +11,8 @@ bulk_sources = Table('lb_bulk_sources', metadata,
 
 bulk_upload = Table('lb_bulk_upload', metadata,
             Column('id_reg', Integer, primary_key=True),
-            Column('chave_externa', String)
-            Column('id_source', Integer, ForeignKey('lb_bulk_sources.id_source')),
+            Column('chave_externa', String),
+            Column('id_source', Integer, ForeignKey('lb_bulk_sources.id_source'))
             )
 
 # define a join between them.  This
@@ -23,5 +23,4 @@ registro = join(bulk_sources, bulk_upload)
 # map to it
 class Registro(Base):
     __table__ = registro
-
     id_source = column_property(bulk_sources.c.id_source, bulk_upload.c.id_source)
