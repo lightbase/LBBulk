@@ -2,10 +2,7 @@ from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 from lbbulk.config.routing import make_routes
 
-from lbbulk.models import (
-    DBSession,
-    Base,
-    )
+from lbbulk.model import Base, metadata, DBSession
 
 
 def main(global_config, **settings):

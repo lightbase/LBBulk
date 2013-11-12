@@ -1,9 +1,7 @@
 from sqlalchemy import Table, Column, Integer, \
-        String, MetaData, join, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
+        String, join, ForeignKey
 from sqlalchemy.orm import column_property
-
-metadata = MetaData()
+from lbbulk.model import Base, metadata
 
 # define two Table objects
 bulk_sources = Table('lb_bulk_sources', metadata,
@@ -18,15 +16,12 @@ bulk_upload = Table('lb_bulk_upload', metadata,
             )
 
 # define a join between them.  This
-# takes place across the user.id and address.user_id
+# takes place across the bulk_sources.id_source and bulk_upload.id_source
 # columns.
-user_address_join = join(user_table, address_table)
-
-Base = declarative_base()
+registro = join(bulk_sources, bulk_upload)
 
 # map to it
-class AddressUser(Base):
-    __table__ = user_address_join
+class Registro(Base):
+    __table__ = registro
 
-    id = column_property(user_table.c.id, address_table.c.user_id)
-    address_id = address_table.c.id
+    id_source = column_property(bulk_sources.c.id_source, bulk_upload.c.id_source)
