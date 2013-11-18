@@ -6,6 +6,6 @@ class RegCustomView(RESTfulView):
         id = self.request.matchdict['id']
         json_reg = self.requests.params['json_reg']
         json_reg = json.loads(json_reg)
-        ins = users.insert().values(chave_externa=json_reg['id_reg', fullname='Jack Jones')
+        ins = registro.insert().values(chave_externa=json_reg['id_reg', fullname='Jack Jones')
         member = self.context.get_member(id)
         return self.render_to_response(member)
