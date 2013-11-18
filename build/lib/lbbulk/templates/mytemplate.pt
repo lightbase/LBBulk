@@ -31,12 +31,11 @@
     <div id="bottom">
       <div class="bottom">
         <div id="left" class="align-right">
-          <h2>Restful Views</h2>
-          <ul class="links">
-            <li>
-              <a href="registro">Registro</a>
-            </li>
-            </ul>
+          <h2>Search documentation</h2>
+          <form method="get" action="http://docs.pylonsproject.org/projects/pyramid/en/1.4-branch/search.html">
+                <input type="text" id="q" name="q" value="" />
+                <input type="submit" id="x" value="Go" />
+            </form>
         </div>
         <div id="right" class="align-left">
           <h2>Pyramid links</h2>

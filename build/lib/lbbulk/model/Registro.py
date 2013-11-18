@@ -2,7 +2,7 @@ from sqlalchemy import Table, Column, Integer, \
         String, join, ForeignKey
 from sqlalchemy.orm import column_property
 from pyramid_restler.model import SQLAlchemyORMContext
-from lbbulk.model import Base, metadata, session
+from lbbulk.model import Base, metadata
 
 # define two Table objects
 bulk_sources = Table('lb_bulk_sources', metadata,
@@ -31,4 +31,8 @@ class RegistroContextFactory(SQLAlchemyORMContext):
     entity = Registro
 
     def session_factory(self):
-        return session
+        return Session()
+
+def root_view(context, request):
+    registro = Session().query(Registro).all()
+    return dict(registro=registro, Registro=Registro)

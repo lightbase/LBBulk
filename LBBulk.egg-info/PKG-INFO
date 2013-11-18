@@ -1,0 +1,35 @@
+Metadata-Version: 1.1
+Name: LBBulk
+Version: 0.1
+Summary: Translator for external keys to fit properly on the lightbase standard
+Home-page: UNKNOWN
+Author: Lightbase
+Author-email: pedro.ricardo@lightbase.com
+License: UNKNOWN
+Description: LBBulk README
+        ==================
+        
+        Getting Started
+        ---------------
+        
+        - cd <directory containing this file>
+        
+        - $VENV/bin/python setup.py develop
+        
+        - $VENV/bin/initialize_LBBulk_db development.ini
+        
+        - $VENV/bin/pserve development.ini
+        
+        
+        
+        0.0
+        ---
+        
+        -  Initial version
+        
+Keywords: lightbase database translator bulk pyramid
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-AlphaFramework :: Pyramid
+Classifier: License :: OSI Approved :: GNU General Public License v2 (GPLv2)
+Classifier: Natural Language :: EnglishProgramming Language :: Python :: 3
+Classifier: Topic :: Database :: Database Engines/Servers

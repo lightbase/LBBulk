@@ -5,4 +5,3 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 metadata = MetaData()
 Base = declarative_base()
 DBSession = scoped_session(sessionmaker())
-session = DBSession
