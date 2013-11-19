@@ -2,10 +2,13 @@ from pyramid_restler.view import RESTfulView
 import json
 
 class RegCustomView(RESTfulView):
-    def get_member(self):
-        id = self.request.matchdict['id']
-        json_reg = self.requests.params['json_reg']
-        json_reg = json.loads(json_reg)
-        ins = registro.insert().values(chave_externa=json_reg['id_reg'])
-        member = self.context.get_member(id)
-        return self.render_to_response(member)
+    def _get_data(self):
+        content_type = self.request.content_type
+        if content_type == 'application/json':
+            data = json.loads(self.request.body)
+        elif content_type == 'application/x-www-form-urlencoded':
+            data = dict(self.request.POST)
+        else:
+            data = self.request.params
+        data = data['json_reg']
+        return data
