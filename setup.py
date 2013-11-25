@@ -18,6 +18,8 @@ requires = [
     'zope.sqlalchemy',
     'waitress',
     'pyramid_restler',
+    'requests',
+    'configparser'
     ]
 
 setup(name='LBBulk',

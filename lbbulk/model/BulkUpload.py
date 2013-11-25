@@ -22,6 +22,12 @@ class BulkUploadContextFactory(SQLAlchemyORMContext):
     def session_factory(self):
         return session
 
+    def create_member(self, data):
+        member = self.entity(**data)
+        self.session.add(member)
+        self.session.commit()
+        return member
+
     def get_member_id_as_string(self, member):
         id = self.get_member_id(member)
         return json.dumps(id, cls=self.json_encoder)

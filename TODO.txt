@@ -1,5 +1,2 @@
-- Recebe registro
-- Verifica se o registro já existe no lightbase:
-    se sim, atualiza
-    se não, cria
-- salva na tabela de chaves a chave do lightbase que corresponde à esse registro
+lbbulk/view/restfulview.py line 41
+lbbulk/view/restfulview.py line 48
