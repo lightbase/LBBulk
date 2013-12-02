@@ -9,24 +9,25 @@ bulk_upload = Table('lb_bulk_upload', metadata,
                     Column('chave_externa', String, nullable=False),
                     Column('id_source', Integer,
                            ForeignKey('lb_bulk_sources.id_source'),
-                           nullable=False)
+                           nullable=False),
+                    extend_existing=True
                    )
 
 # map to it
 class BulkUpload(Base):
     __table__ = bulk_upload
 
+    def verifica_registro(data):
+        q = session.query(BulkUpload).filter_by(id_source=data['id_source'], chave_externa=data['json_reg']['id_reg'] )
+        registro_existe = q.first()
+        return registro_existe
+
+
 class BulkUploadContextFactory(SQLAlchemyORMContext):
     entity = BulkUpload
 
     def session_factory(self):
         return session
-
-    def create_member(self, data):
-        member = self.entity(**data)
-        self.session.add(member)
-        self.session.commit()
-        return member
 
     def get_member_id_as_string(self, member):
         id = self.get_member_id(member)
