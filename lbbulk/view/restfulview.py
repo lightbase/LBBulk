@@ -58,8 +58,8 @@ class RegCustomView(RESTfulView):
 
     def get_url_lightbase(self): #TODO
         """ Returns url from config """
-        domain = 'http://localhost/lbgenerator'
-        base_name = 'WMI'
+        domain = 'http://api.brlight.org'
+        base_name = 'wmi'
         url = domain + '/' + base_name + '/reg'
         return url
 
