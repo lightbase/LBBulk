@@ -34,7 +34,10 @@
           <h2>Restful Views</h2>
           <ul class="links">
             <li>
-              <a href="registro">Registro</a>
+              <a href="/lbbulk/reg">Registros</a>
+            </li>
+            <li>
+              <a href="/lbbulk/source">Fontes de Dados</a>
             </li>
             </ul>
         </div>
