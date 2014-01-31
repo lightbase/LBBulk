@@ -36,8 +36,9 @@ class RegCustomView(RESTfulView):
         # print(existente.id_reg)
         print('\n\n\n\n\n\n\n\n\n\n')
         registro = self.is_error(data)
-        id_source = registro['id_source']
-        registro.pop('id_source', None)
+        #id_source = registro['id_source']
+        #registro.pop('id_source', None)
+        id_source = 1
         chave_externa = registro['json_reg']['id_reg']
         registro['json_reg'].pop('id_reg', None)
         registro['json_reg'] = json.dumps(registro['json_reg'])
