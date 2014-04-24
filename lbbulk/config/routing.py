@@ -1,6 +1,6 @@
 # import lbbulk.model
 from lbbulk.model.BulkUpload import BulkUploadContextFactory
-from lbbulk.model.BulkSources import BulkSourceContextFactory
+from lbbulk.model.BulkSource import BulkSourceContextFactory
 from lbbulk.view.restfulview import RegCustomView
 
 def make_routes(config):
