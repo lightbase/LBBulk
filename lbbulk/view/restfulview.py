@@ -36,8 +36,9 @@ class RegCustomView(RESTfulView):
         # print(existente.id_reg)
         print('\n\n\n\n\n\n\n\n\n\n')
         registro = self.is_error(data)
-        id_source = registro['id_source']
-        registro.pop('id_source', None)
+        #id_source = registro['id_source']
+        #registro.pop('id_source', None)
+        id_source = 1
         chave_externa = registro['json_reg']['id_reg']
         registro['json_reg'].pop('id_reg', None)
         registro['json_reg'] = json.dumps(registro['json_reg'])
@@ -59,7 +60,7 @@ class RegCustomView(RESTfulView):
     def get_url_lightbase(self): #TODO
         """ Returns url from config """
         domain = 'http://api.brlight.org'
-        base_name = 'wmi'
+        base_name = 'wmi_teste'
         url = domain + '/' + base_name + '/reg'
         return url
 

@@ -18,7 +18,8 @@ class BulkUpload(Base):
     __table__ = bulk_upload
 
     def verifica_registro(data):
-        q = session.query(BulkUpload).filter_by(id_source=data['id_source'], chave_externa=data['json_reg']['id_reg'] )
+#        q = session.query(BulkUpload).filter_by(id_source=data['id_source'], chave_externa=data['json_reg']['id_reg'] )
+        q = session.query(BulkUpload).filter_by(id_source=1, chave_externa=data['json_reg']['id_reg'] )
         registro_existe = q.first()
         return registro_existe
 
