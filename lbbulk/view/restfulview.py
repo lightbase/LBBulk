@@ -28,40 +28,41 @@ class RegCustomView(RESTfulView):
         return data
 
     def send_to_lightbase(self, data):
-        """ Sends the register to a lightbase table and returns a dict
+        """ Sends the registers to a neo-light base and returns a dict
         with the external key and lighbase's id_reg """
         data['json_reg'] = json.loads(data['json_reg'])
         # converte os filhos pra dicts
-        existente = BulkUpload.verifica_registro(data)
-        # print(existente.id_reg)
-        print('\n\n\n\n\n\n\n\n\n\n')
+#        existente = BulkUpload.verifica_registro(data)
         registro = self.is_error(data)
-        #id_source = registro['id_source']
-        #registro.pop('id_source', None)
+#        id_source = registro['id_source']
         id_source = 1
-        chave_externa = registro['json_reg']['id_reg']
+        external_key = registro['json_reg']['id_reg']
         registro['json_reg'].pop('id_reg', None)
+        registro['json_reg'].pop('name_source', None)
         registro['json_reg'] = json.dumps(registro['json_reg'])
         url = self.get_url_lightbase()
-        if existente is None:
+#        if existente:
+#            r = requests.put(url, data=registro)
+#            id_reg = existente
+#            data = None
+        if False:
+             pass
+        else:
             r = requests.post(url, data=registro)
             id_reg = self.is_error_resp(r.json())
             data = {
                     'id_source':id_source,
                     'id_reg':id_reg,
-                    'chave_externa':chave_externa
+                    'external_key':external_key
                    }
-        else:
-            r = requests.put(url, data=registro)
-            id_reg = existente
-            data = None
         return data
 
     def get_url_lightbase(self): #TODO
         """ Returns url from config """
-        domain = 'http://api.brlight.org'
-        base_name = 'wmi_teste'
-        url = domain + '/' + base_name + '/reg'
+        domain = 'http://localhost/lightbase'
+        base_name = 'wmi'
+#        url = (settings['domain'] + '/' + settings['base_name'] + '/reg')
+        url = (domain + '/' + base_name + '/reg')
         return url
 
     def is_error(self,data): #TODO

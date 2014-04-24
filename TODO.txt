@@ -1,2 +1,0 @@
-lbbulk/view/restfulview.py line 41
-lbbulk/view/restfulview.py line 48

@@ -1,12 +1,7 @@
-###
-# app configuration
-# http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/environment.html
-###
-
 [app:main]
 use = egg:LBBulk
 
-pyramid.reload_templates = false
+pyramid.reload_templates = true
 pyramid.debug_authorization = false
 pyramid.debug_notfound = false
 pyramid.debug_routematch = false
@@ -24,7 +19,7 @@ use = egg:waitress#main
 host = 0.0.0.0
 port = 6543
 
-### 
+###
 # logging configuration
 # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/logging.html
 ###
@@ -39,11 +34,11 @@ keys = console
 keys = generic
 
 [logger_root]
-level = WARN
+level = INFO
 handlers = console
 
 [logger_lbbulk]
-level = WARN
+level = DEBUG
 handlers =
 qualname = lbbulk
 
