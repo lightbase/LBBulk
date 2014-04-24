@@ -1,0 +1,7 @@
+from pyramid.paster import get_app, setup_logging
+
+ini_path = '/srv/lightbase/LBBulk/development.ini'
+#ini_path = '/srv/lightbase/LBBulk/production.ini'
+
+setup_logging(ini_path)
+application = get_app(ini_path, 'main')

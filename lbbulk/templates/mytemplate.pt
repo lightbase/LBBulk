@@ -39,6 +39,9 @@
             <li>
               <a href="/lbbulk/source">Fontes de Dados</a>
             </li>
+            <li>
+              <hr>
+            </li>
             </ul>
         </div>
         <div id="right" class="align-left">
