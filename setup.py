@@ -9,18 +9,9 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
     CHANGES = f.read()
 
 requires = [
+    'ijson',
     'pyramid',
-    'SQLAlchemy',
-    'transaction',
-    'pyramid_tm',
-    'pyramid_debugtoolbar',
-    'zope.sqlalchemy',
-    'waitress',
-    'psycopg2',
-    'pyramid_restler',
-    'pyramid_chameleon',
     'requests',
-    'chameleon'
 ]
 
 setup(name='LBBulk',
