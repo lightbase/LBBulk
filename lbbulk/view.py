@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import os
 import cgi
 import sys
@@ -8,10 +8,16 @@ import ijson
 import shutil
 import zipfile
 import requests
+import logging
+import datetime
+from . import utils
 from lbbulk import config
 from multiprocessing import Process
 from pyramid.view import view_config
 from pyramid.response import Response
+
+log = logging.getLogger()
+
 
 @view_config(context=Exception)
 def error_view(exc, request):
@@ -24,7 +30,23 @@ def error_view(exc, request):
         exc_msg = exc_obj.args[0]
     return Response(exc_msg, status=500)
 
+
 def zip_upload(request):
+    """
+    Faz upload up arquivo .zip
+    :param request: Requisição HTTP
+    :return: Resposta json
+    """
+    nome_base = request.params.get('source_name')
+    default_value = {
+        'attribute_value': request.params.get('default_value'),
+        'attribute_name': request.params.get('default_field')
+    }
+
+    log.debug("Inserindo coleta para a base %s", nome_base)
+
+    url = config.LIGHTBASE_URL + "/" + nome_base + "/doc"
+    log.debug("URL para inserção da base: %s", url)
 
     file_ = request.params.get('file')
 
@@ -33,13 +55,23 @@ def zip_upload(request):
     else:
         ext_dir, json_file_path = extract_zip(file_)
         process = Process(target=bulk_upload, args=(ext_dir, json_file_path,
-            config.LIGHTBASE_URL))
+            url, default_value))
         process.start()
 
-    return Response('OK')
+    return Response('OK', status=200)
+
 
 def extract_zip(zfile):
-
+    """
+    Extrai arquivo .zip
+    :param zfile: Nome do arquivo .zip a ser extraído
+    :return: JSON no seguinte formato:
+        {
+            ext_dir: diretório onde os arquivos foram extraídos,
+            json_file_path: arquivo JSON com dados extraídos
+        }
+    """
+    log.debug("Extraindo arquivo ...")
     identifier = str(uuid.uuid4())
     zpath = config.EXTRACT_DIR + '/' + identifier + '.zip'
     zpath = os.path.abspath(zpath)
@@ -51,7 +83,7 @@ def extract_zip(zfile):
     except Exception as e:
         raise Exception('Error while uploading file! %s' % e)
 
-    ext_dir =  os.path.abspath(config.EXTRACT_DIR + '/' + identifier)
+    ext_dir = os.path.abspath(config.EXTRACT_DIR + '/' + identifier)
 
     if not os.path.exists(ext_dir):
             os.makedirs(ext_dir)
@@ -75,9 +107,17 @@ def extract_zip(zfile):
 
     return ext_dir, json_file_path
 
-def bulk_upload(ext_dir, file_path, url):
 
+def bulk_upload(ext_dir, file_path, url, default_value=None):
+    """
+    Faz upload de um conjunto de registros
+    :param ext_dir: Diretório externo para extração do arquivo .zip com o conjunto de registros
+    :param file_path: Caminho completo para arquivo JSON extraído
+    :param url: URL do Lightbase para envio dos registros
+    :param default_value: Um valor padrão para ser adicionado em todos os regisros da base
+    """
     file_ = open(file_path, 'rb')
+    data_coleta = datetime.datetime.now().strftime("%d/%m/%Y")
 
     try:
         objects = ijson.items(file_, 'results.item')
@@ -86,10 +126,32 @@ def bulk_upload(ext_dir, file_path, url):
         print('Error While Reading JSON file: %s' % e)
 
     for computer in computers:
-        document = json.dumps(computer)
+        # Ajusta data da coleta
+        computer['data_coleta'] = data_coleta
+        if default_value is not None:
+            log.debug("Valor padrão: \n%s", default_value)
+            if default_value.get('attribute_name') is None or \
+                default_value.get('attribute_value') is None:
+                # None of the attributes can be null
+                log.debug("Valores padrão não podem ter definições vazias vazios\n")
+                pass
+            else:
+                try:
+                    computer[default_value['attribute_name']] = default_value['attribute_value']
+                except KeyError:
+                    log.error("Não foi passível ajustar valor %s para o campo %s", default_value['attribute_name'], default_value['attribute_value'])
 
-        response = requests.post(url,
-            data={'value': document})
+        document = json.dumps(computer, cls=utils.DecimalEncoder)
+        log.debug(document)
+
+        response = requests.post(url, data={
+            'value': document
+        })
+
+        if response.status_code == 200:
+            log.debug("Registro inserido com sucesso!!!\n%s", document)
+        else:
+            log.error("Erro na inserção do registro!!! Código = %s\n%s", response.status_code, response.text)
 
     shutil.rmtree(ext_dir)
 

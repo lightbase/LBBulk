@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 def setup_config(settings):
 
     global EXTRACT_DIR
@@ -8,6 +8,7 @@ def setup_config(settings):
     EXTRACT_DIR = settings['extract_dir']
     JSON_FILENAME = settings['json_filename']
     LIGHTBASE_URL = settings['lightbase_url']
+
 
 def make_routes(cfg):
 

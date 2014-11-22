@@ -3,7 +3,7 @@ use = egg:LBBulk
 
 extract_dir = /tmp/extract-zip
 json_filename = /zipmaluco/coleta.json
-lightbase_url= http://0.0.0.0/api/basex/doc
+lightbase_url = http://localhost/api
 
 [server:main]
 use = egg:waitress#main
