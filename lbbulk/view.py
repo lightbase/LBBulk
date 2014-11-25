@@ -98,12 +98,24 @@ def extract_zip(zfile):
     # remove zip file
     os.remove(zpath)
 
-    json_file_path = ext_dir + '/' + config.JSON_FILENAME
-    json_file_path = os.path.abspath(json_file_path)
+    # Find JSON file
+    json_file_path = None
+    for (dirpath, dirnames, filenames) in os.walk(ext_dir):
+        for file in filenames:
+            full_path = os.path.join(dirpath, file)
+            root, ext = os.path.splitext(full_path)
+            if ext == '.json':
+                json_file_path = full_path
+
+    if json_file_path is None:
+        raise Exception('Could not find any JSON file in zip file!!! Full path: %s', ext_dir)
+    #json_file_path = ext_dir + '/' + config.JSON_FILENAME
+    #json_file_path = os.path.abspath(json_file_path)
+    log.debug("Caminho completo do arquivo JSON %s", json_file_path)
 
     if not os.path.exists(json_file_path):
         raise Exception('Could not find any json file in zip file: %s' %
-            config.JSON_FILENAME)
+            json_file_path)
 
     return ext_dir, json_file_path
 
