@@ -12,6 +12,7 @@ requires = [
     'ijson',
     'pyramid',
     'requests',
+    'liblightbase'
 ]
 
 setup(name='LBBulk',
