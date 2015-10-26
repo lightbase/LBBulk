@@ -72,6 +72,8 @@ def extract_zip(zfile):
         }
     """
     log.debug("Extraindo arquivo ...")
+    if not os.path.exists(config.EXTRACT_DIR):
+        os.makedirs(config.EXTRACT_DIR)
     identifier = str(uuid.uuid4())
     zpath = config.EXTRACT_DIR + '/' + identifier + '.zip'
     zpath = os.path.abspath(zpath)
