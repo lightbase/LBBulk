@@ -15,9 +15,11 @@ from lbbulk import config
 from multiprocessing import Process
 from pyramid.view import view_config
 from pyramid.response import Response
+import psycopg2
+from psycopg2.extensions import AsIs
 
 log = logging.getLogger()
-
+orgao_name = ""
 
 @view_config(context=Exception)
 def error_view(exc, request):
@@ -37,7 +39,9 @@ def zip_upload(request):
     :param request: Requisição HTTP
     :return: Resposta json
     """
+    global orgao_name
     nome_base = request.params.get('source_name')
+    orgao_name = nome_base
     default_value = {
         'attribute_value': request.params.get('default_value'),
         'attribute_name': request.params.get('default_field')
@@ -91,7 +95,7 @@ def extract_zip(zfile):
             os.makedirs(ext_dir)
 
     try:
-        # extract zip file 
+        # extract zip file
         with zipfile.ZipFile(zpath, "r") as z:
             z.extractall(ext_dir)
     except Exception as e:
@@ -121,6 +125,26 @@ def extract_zip(zfile):
 
     return ext_dir, json_file_path
 
+def insert_relacional(document_json):
+    host = config.HOST_DB
+    database = config.DATABASE_DB
+    user = config.USER_DB
+    password = config.PASSWORD_DB
+    conn = psycopg2.connect(host=host, database=database, user=user, password=password)
+    cur = conn.cursor()
+    verify_base = utils.RelacionalBase().verifyDatabase(conn)
+    if verify_base:
+        json_final = utils.RelacionalBase.removeGroupJson(document_json)
+        json_final["name_orgao"] = orgao_name
+        columns = json_final.keys()
+        values = [json_final[column] for column in columns]
+        insert_statement = 'INSERT INTO cacic_relacional.cacic_relacional (%s) values %s'
+        cur.execute(insert_statement, (AsIs(','.join(columns)), tuple(values)))
+        conn.commit()
+    else:
+        log.error("Erro ao verificar ou criar a base.")
+    conn.close()
+    return True
 
 def bulk_upload(ext_dir, file_path, url, default_value=None):
     """
@@ -132,7 +156,9 @@ def bulk_upload(ext_dir, file_path, url, default_value=None):
     """
     file_ = open(file_path, 'rb')
     data_coleta = datetime.datetime.now().strftime("%d/%m/%Y")
-
+    print("default_value:", default_value)
+    print ("file:", file_path)
+    print("data coleta", data_coleta)
     try:
         objects = ijson.items(file_, 'results.item')
         computers = (computer for computer in objects)
@@ -155,17 +181,18 @@ def bulk_upload(ext_dir, file_path, url, default_value=None):
                 except KeyError:
                     log.error("Não foi passível ajustar valor %s para o campo %s", default_value['attribute_name'], default_value['attribute_value'])
 
+        document_old = computer
         document = json.dumps(computer, cls=utils.DecimalEncoder)
-        log.debug(document)
 
         response = requests.post(url, data={
             'value': document
         })
+        # Create and insert in relational database
+        insert_database = insert_relacional(document_old)
 
-        if response.status_code == 200:
+        if response.status_code == 200 and insert_database:
             log.debug("Registro inserido com sucesso!!!\n%s", document)
         else:
             log.error("Erro na inserção do registro!!! Código = %s\n%s", response.status_code, response.text)
 
     shutil.rmtree(ext_dir)
-

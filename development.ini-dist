@@ -3,7 +3,13 @@ use = egg:LBBulk
 
 extract_dir = /tmp/extract-zip
 json_filename = /zipmaluco/coleta.json
-lightbase_url = http://localhost/api
+lightbase_url = http://127.0.0.1/api
+
+# Config for relational database
+host = localhost
+database = rest
+user = rest
+password = rest
 
 [server:main]
 use = egg:waitress#main
@@ -36,7 +42,7 @@ qualname = lbbulk
 [logger_sqlalchemy]
 level = WARN
 handlers =
-qualname = sqlalchemy.engine
+qualname = sqlalchemy.enginefix         fi
 # "level = INFO" logs SQL queries.
 # "level = DEBUG" logs SQL queries and results.
 # "level = WARN" logs neither.  (Recommended for production systems.)

@@ -5,6 +5,12 @@ extract_dir = /tmp/extract-zip
 json_filename = /zipmaluco/coleta.json
 lightbase_url= http://0.0.0.0/api/basex/doc
 
+# Config for relational database
+host = 127.0.0.1
+database = database_name
+user = username
+password = 123456
+
 [server:main]
 use = egg:waitress#main
 host = 0.0.0.0
