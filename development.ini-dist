@@ -42,7 +42,7 @@ qualname = lbbulk
 [logger_sqlalchemy]
 level = WARN
 handlers =
-qualname = sqlalchemy.enginefix         fi
+qualname = sqlalchemy.engine
 # "level = INFO" logs SQL queries.
 # "level = DEBUG" logs SQL queries and results.
 # "level = WARN" logs neither.  (Recommended for production systems.)
