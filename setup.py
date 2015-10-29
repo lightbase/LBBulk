@@ -16,7 +16,7 @@ requires = [
 ]
 
 setup(name='LBBulk',
-      version='0.1',
+      version='0.2',
       description='Translator for external keys to fit properly on the lightbase standard',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

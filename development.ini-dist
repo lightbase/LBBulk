@@ -5,7 +5,8 @@ extract_dir = /tmp/extract-zip
 json_filename = /zipmaluco/coleta.json
 lightbase_url = http://127.0.0.1/api
 
-# Config for relational database
+# Configuration for relational database
+# The data will be inserted in this settings
 host = localhost
 database = rest
 user = rest
