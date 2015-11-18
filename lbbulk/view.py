@@ -134,12 +134,18 @@ def insert_relacional(document_json):
     cur = conn.cursor()
     verify_base = utils.RelacionalBase().verifyDatabase(conn)
     if verify_base:
-        json_final = utils.RelacionalBase.removeGroupJson(document_json)
-        json_final["name_orgao"] = orgao_name
+        json_final,softwarelist = utils.RelacionalBase.removeGroupJson(document_json)
+        json_final["nome_orgao"] = orgao_name
         columns = json_final.keys()
         values = [json_final[column] for column in columns]
-        insert_statement = 'INSERT INTO cacic_relacional.cacic_relacional (%s) values %s'
+        insert_statement = 'INSERT INTO cacic_relacional.cacic_relacional (%s) values %s RETURNING id'
         cur.execute(insert_statement, (AsIs(','.join(columns)), tuple(values)))
+        for item in cur:
+            pc_id = item
+            pc_id = pc_id[0]
+        log.info("ID_PC = %s", pc_id)
+        insert_statement = 'INSERT INTO cacic_relacional.cacic_relacional_softwarelist (pc_id, nome_softwarelist) VALUES (%s, %s)'
+        cur.execute(insert_statement, (pc_id, softwarelist))
         conn.commit()
     else:
         log.error("Erro ao verificar ou criar a base.")

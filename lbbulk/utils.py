@@ -15,6 +15,9 @@ class DecimalEncoder(json.JSONEncoder):
 
         if isinstance(obj, Decimal):
             obj = int(obj)
+        elif isinstance(obj, str):
+            if obj.isdigit():
+                obj = int(obj)
         else:
             # method to generate JSON
             obj = obj._encoded()
@@ -58,7 +61,7 @@ class RelacionalBase():
                                  "id BIGSERIAL PRIMARY KEY,"
                                  "hash_machine varchar(250),"
                                  "win32_diskdrive_size varchar(250),"
-                                 "name_orgao varchar(250),"
+                                 "nome_orgao varchar(250),"
                                  "data_coleta varchar(250),"
                                  "data_ultimo_acesso varchar(250),"
                                  "win32_processor_manufacturer varchar(250),"
@@ -74,6 +77,11 @@ class RelacionalBase():
                                  "win32_diskdrive_caption varchar(250),"
                                  "operatingsystem_installdate varchar(250),"
                                  "win32_processor_maxclockspeed varchar(250));")
+                    #Criando tabela de softwarelist
+                    cur.execute ("CREATE TABLE cacic_relacional.cacic_relacional_softwarelist("
+                                 "id BIGSERIAL PRIMARY KEY,"
+                                 "nome_softwarelist varchar(250)[],"
+                                 "pc_id integer);")
                     conn.commit()
                 return True
             except Exception as e:
@@ -81,14 +89,16 @@ class RelacionalBase():
 
         def removeGroupJson(json_data):
             new_json = {}
+            softwarelist = list()
             for item in json_data.keys():
                 if isinstance(json_data[item], str):
                     new_json[item] = json_data[item]
                 elif isinstance(json_data[item], list):
                     # TODO: ALTERAR PARA CRIAR A TABELA DE SOFTWARELIST
-                    #new_json[item] = json_data[item]
+                    for software in json_data[item]:
+                        softwarelist.append(software)
                     pass
                 else:
                     for item_group in json_data[item].keys():
                         new_json[item_group] = json_data[item][item_group]
-            return new_json
+            return new_json,softwarelist
