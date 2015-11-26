@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 __author__ = 'eduardo'
-
+import logging
 import json
 from decimal import *
 import psycopg2
 from psycopg2.extensions import AsIs
+
+log = logging.getLogger()
 
 class DecimalEncoder(json.JSONEncoder):
     """
@@ -24,7 +26,8 @@ class DecimalEncoder(json.JSONEncoder):
 
         return obj
 
-class RelacionalBase():
+
+class RelacionalBase(object):
         def __ini__(self):
             pass
 
@@ -57,7 +60,7 @@ class RelacionalBase():
                     #              "win32_diskdrive_caption character varying(250),"
                     #              "operatingsystem_installdate character varying(250),"
                     #              "win32_processor_maxclockspeed character varying(250));")
-                    cur.execute ("CREATE TABLE cacic_relacional.cacic_relacional("
+                    cur.execute("CREATE TABLE cacic_relacional.cacic_relacional("
                                  "id BIGSERIAL PRIMARY KEY,"
                                  "hash_machine varchar(250),"
                                  "win32_diskdrive_size varchar(250),"
@@ -85,7 +88,7 @@ class RelacionalBase():
                                  "win32_bios_releasedate varchar(250),"
                                  "win32_baseboard_installdate varchar,"
                                  "win32_diskdrive_model varchar(250),"
-                                 "win32_diskdrive_caption varchar(250);")
+                                 "win32_diskdrive_caption varchar(250));")
 
                     #Criando tabela de softwarelist
                     cur.execute ("CREATE TABLE cacic_relacional.cacic_relacional_softwarelist("
@@ -95,6 +98,7 @@ class RelacionalBase():
                     conn.commit()
                 return True
             except Exception as e:
+                log.error(e)
                 return False
 
         def removeGroupJson(json_data):
