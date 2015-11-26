@@ -63,7 +63,6 @@ class RelacionalBase(object):
                     cur.execute("CREATE TABLE cacic_relacional.cacic_relacional("
                                  "id BIGSERIAL PRIMARY KEY,"
                                  "hash_machine varchar(250),"
-                                 "win32_diskdrive_size varchar(250),"
                                  "nome_orgao varchar(250),"
                                  "data_coleta varchar(250),"
                                  "siorg varchar,"
@@ -87,13 +86,23 @@ class RelacionalBase(object):
                                  "win32_bios_installdate varchar(250),"
                                  "win32_bios_releasedate varchar(250),"
                                  "win32_baseboard_installdate varchar,"
+                                 "win32_diskdrive_size varchar(250),"
                                  "win32_diskdrive_model varchar(250),"
                                  "win32_diskdrive_caption varchar(250));")
 
                     #Criando tabela de softwarelist
-                    cur.execute ("CREATE TABLE cacic_relacional.cacic_relacional_softwarelist("
+                    cur.execute("CREATE TABLE cacic_relacional.cacic_relacional_softwarelist("
                                  "id BIGSERIAL PRIMARY KEY,"
-                                 "nome_softwarelist varchar(250)[],"
+                                 "hash_machine varchar(250),"
+                                 "nome_orgao varchar(250),"
+                                 "data_coleta varchar(250),"
+                                 "siorg varchar,"
+                                 "mac varchar,"
+                                 "ip_computador varchar,"
+                                 "ip_rede varchar,"
+                                 "nome_rede varchar,"
+                                 "data_ultimo_acesso varchar(250),"
+                                 "nome_softwarelist varchar(250),"
                                  "pc_id integer);")
                     conn.commit()
                 return True

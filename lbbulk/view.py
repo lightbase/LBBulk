@@ -134,7 +134,7 @@ def insert_relacional(document_json):
     cur = conn.cursor()
     verify_base = utils.RelacionalBase().verifyDatabase(conn)
     if verify_base:
-        json_final,softwarelist = utils.RelacionalBase.removeGroupJson(document_json)
+        json_final, softwarelist = utils.RelacionalBase.removeGroupJson(document_json)
         json_final["nome_orgao"] = orgao_name
         columns = json_final.keys()
         values = [json_final[column] for column in columns]
@@ -144,8 +144,41 @@ def insert_relacional(document_json):
             pc_id = item
             pc_id = pc_id[0]
         log.info("ID_PC = %s", pc_id)
-        insert_statement = 'INSERT INTO cacic_relacional.cacic_relacional_softwarelist (pc_id, nome_softwarelist) VALUES (%s, %s)'
-        cur.execute(insert_statement, (pc_id, softwarelist))
+
+        for software in softwarelist:
+            # Um software em cada linha da tabela
+            insert_statement = """
+                INSERT INTO cacic_relacional.cacic_relacional_softwarelist (
+                  pc_id,
+                  hash_machine,
+                  nome_orgao,
+                  data_coleta,
+                  siorg,
+                  mac,
+                  ip_computador,
+                  ip_rede,
+                  nome_rede,
+                  data_ultimo_acesso,
+                  nome_softwarelist
+                  ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+              """
+
+            cur.execute(
+                insert_statement,
+                (
+                    pc_id,
+                    json_final["hash_machine"],
+                    json_final["nome_orgao"],
+                    json_final["data_coleta"],
+                    json_final.get("siorg"),
+                    json_final["mac"],
+                    json_final["ip_computador"],
+                    json_final["ip_rede"],
+                    json_final["nome_rede"],
+                    json_final["data_ultimo_acesso"],
+                    software
+                )
+            )
         conn.commit()
     else:
         log.error("Erro ao verificar ou criar a base.")
