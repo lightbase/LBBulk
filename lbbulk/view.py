@@ -125,6 +125,7 @@ def extract_zip(zfile):
 
     return ext_dir, json_file_path
 
+
 def insert_relacional(document_json):
     host = config.HOST_DB
     database = config.DATABASE_DB
@@ -135,7 +136,8 @@ def insert_relacional(document_json):
     verify_base = utils.RelacionalBase().verifyDatabase(conn)
     if verify_base:
         json_final, softwarelist = utils.RelacionalBase.removeGroupJson(document_json)
-        json_final["nome_orgao"] = orgao_name
+        if json_final.get('nome_orgao') is None:
+            json_final["nome_orgao"] = orgao_name
         columns = json_final.keys()
         values = [json_final[column] for column in columns]
         insert_statement = 'INSERT INTO cacic_relacional.cacic_relacional (%s) values %s RETURNING id'
@@ -185,6 +187,7 @@ def insert_relacional(document_json):
     conn.close()
     return True
 
+
 def bulk_upload(ext_dir, file_path, url, default_value=None):
     """
     Faz upload de um conjunto de registros
@@ -196,7 +199,7 @@ def bulk_upload(ext_dir, file_path, url, default_value=None):
     file_ = open(file_path, 'rb')
     data_coleta = datetime.datetime.now().strftime("%d/%m/%Y")
     print("default_value:", default_value)
-    print ("file:", file_path)
+    print("file:", file_path)
     print("data coleta", data_coleta)
     try:
         objects = ijson.items(file_, 'results.item')
